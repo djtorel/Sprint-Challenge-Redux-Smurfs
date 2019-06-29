@@ -1,7 +1,13 @@
 /*
   Be sure to import in all of the action types from `../actions`
 */
-import { ERROR, FETCH_SMURFS_START, FETCH_SMURFS_SUCCESS } from '../actions';
+import {
+  ERROR,
+  FETCH_SMURFS_START,
+  FETCH_SMURFS_SUCCESS,
+  CREATE_SMURF_START,
+  CREATE_SMURF_SUCCESS,
+} from '../actions';
 
 /*
  Your initial/default state for this project could *Although does not have to* look a lot like this
@@ -50,6 +56,20 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         smurfs: payload,
         fetchingSmurfs: false,
+        error: '',
+      };
+    case CREATE_SMURF_START:
+      return {
+        ...state,
+        addingSmurf: true,
+        error: '',
+      };
+    case CREATE_SMURF_SUCCESS:
+      console.log('payload', payload);
+      return {
+        ...state,
+        smurfs: [...state.smurfs, payload[state.smurfs.length]],
+        addingSmurf: false,
         error: '',
       };
     default:

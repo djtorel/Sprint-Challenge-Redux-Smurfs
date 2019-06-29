@@ -4,8 +4,12 @@ import axios from 'axios';
   Be sure to export each action type so you can pull it into your reducer
 */
 export const ERROR = 'ERROR';
+
 export const FETCH_SMURFS_START = 'FETCH_SMURFS_START';
 export const FETCH_SMURFS_SUCCESS = 'FETCH_SMURFS_SUCCESS';
+
+export const CREATE_SMURF_START = 'CREATE_SMURF_START';
+export const CREATE_SMURF_SUCCESS = 'CREATE_SMURF_SUCCESS';
 
 /*
   For this project you'll need at least 2 action creators for the main portion,
@@ -20,6 +24,7 @@ export const FETCH_SMURFS_SUCCESS = 'FETCH_SMURFS_SUCCESS';
 
 const API_URL = 'http://localhost:3333/smurfs';
 const GET = 'get';
+const POST = 'post';
 
 const tryApiDispatch = async (type, success, apiPayload = null) => {
   try {
@@ -27,7 +32,7 @@ const tryApiDispatch = async (type, success, apiPayload = null) => {
     return { type: success, payload: data };
   } catch ({ message }) {
     return { type: ERROR, payload: message };
-    }
+  }
 };
 
 const callApi = {
@@ -39,4 +44,8 @@ export const getSmurfs = () => async dispatch => {
   dispatch({ type: FETCH_SMURFS_START });
   dispatch(await callApi.get(FETCH_SMURFS_SUCCESS));
 };
+
+export const addSmurf = smurf => async dispatch => {
+  dispatch({ type: CREATE_SMURF_START });
+  dispatch(await callApi.post(CREATE_SMURF_SUCCESS, smurf));
 };
