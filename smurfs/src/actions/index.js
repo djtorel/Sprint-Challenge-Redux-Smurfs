@@ -22,12 +22,13 @@ const API_URL = 'http://localhost:3333/smurfs';
 const GET = 'get';
 
 const tryApiDispatch = async (dispatch, type, success, apiPayload = null) => {
-  try {
-    const { data } = await axios[type](API_URL, apiPayload);
-    dispatch({ type: success, payload: data });
-  } catch ({ message }) {
-    dispatch({ type: ERROR, payload: message });
-  }
+  const { data } = await axios[type](API_URL, apiPayload).catch(
+    ({ message }) => {
+      dispatch({ type: ERROR, payload: message });
+    }
+  );
+
+  data && dispatch({ type: success, payload: data });
 };
 
 export const getSmurfs = () => dispatch => {
