@@ -1,8 +1,5 @@
 import axios from 'axios';
-/*
-  Action Types Go Here!
-  Be sure to export each action type so you can pull it into your reducer
-*/
+
 export const ERROR = 'ERROR';
 
 export const FETCH_SMURFS_START = 'FETCH_SMURFS_START';
