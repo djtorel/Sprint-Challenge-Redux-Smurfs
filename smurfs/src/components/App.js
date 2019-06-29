@@ -20,8 +20,8 @@ class App extends Component {
     return (
       <div className="App">
         <h1>SMURFS! 2.0 W/ Redux</h1>
-        {smurfs.map(({ name, age, height }, i) => (
-          <Smurf key={i} name={name} age={age} height={height} />
+        {smurfs.map(({ name, age, height, id }) => (
+          <Smurf key={id} name={name} age={age} height={height} />
         ))}
       </div>
     );
