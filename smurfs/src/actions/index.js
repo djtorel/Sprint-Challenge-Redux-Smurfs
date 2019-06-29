@@ -21,23 +21,22 @@ export const FETCH_SMURFS_SUCCESS = 'FETCH_SMURFS_SUCCESS';
 const API_URL = 'http://localhost:3333/smurfs';
 const GET = 'get';
 
-const tryApiDispatch = async (dispatch, type, success, apiPayload = null) => {
-  const { data } = await axios[type](API_URL, apiPayload).catch(
-    ({ message }) => {
-      dispatch({ type: ERROR, payload: message });
+const tryApiDispatch = async (type, success, apiPayload = null) => {
+  try {
+    const { data } = await axios[type](API_URL, apiPayload);
+    return { type: success, payload: data };
+  } catch ({ message }) {
+    return { type: ERROR, payload: message };
     }
-  );
-
-  data && dispatch({ type: success, payload: data });
 };
 
-export const getSmurfs = () => dispatch => {
+const callApi = {
+  get: success => tryApiDispatch(GET, success),
+  post: (success, payload) => tryApiDispatch(POST, success, payload),
+};
+
+export const getSmurfs = () => async dispatch => {
   dispatch({ type: FETCH_SMURFS_START });
-  tryApiDispatch(dispatch, GET, FETCH_SMURFS_SUCCESS);
-  // try {
-  //   const { data } = await axios.get(API_URL);
-  //   dispatch({ type: FETCH_SMURFS_SUCCESS, payload: data });
-  // } catch ({ message }) {
-  //   dispatch({ type: ERROR, payload: message });
-  // }
+  dispatch(await callApi.get(FETCH_SMURFS_SUCCESS));
+};
 };
