@@ -24,6 +24,11 @@ const SmurfForm = ({ addSmurf }) => {
       userInput.height.length > 0
     ) {
       addSmurf(userInput);
+      setUserInput({
+        name: '',
+        age: '',
+        height: '',
+      });
     }
   };
 
