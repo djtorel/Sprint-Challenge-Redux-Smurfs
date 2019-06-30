@@ -21,10 +21,10 @@ const PUT = 'put';
 const DELETE = 'delete';
 
 const tryApiDispatch = async (method, success, options) => {
-  const { id, apiPayload } = options || {};
+  const { id = null, apiPayload } = options || {};
   try {
     const { data } = await axios[method](
-      `${API_URL}/${id >= 0 ? id : ''}`,
+      `${API_URL}/${id !== null ? id : ''}`,
       apiPayload
     );
     return { type: success, payload: data };
