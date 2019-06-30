@@ -20,14 +20,13 @@ const POST = 'post';
 const PUT = 'put';
 const DELETE = 'delete';
 
-const tryApiDispatch = async (
-  type,
-  success,
-  apiPayload = null,
-  url = API_URL
-) => {
+const tryApiDispatch = async (type, success, options) => {
+  const { id, apiPayload } = options || {};
   try {
-    const { data } = await axios[type](url, apiPayload);
+    const { data } = await axios[type](
+      `${API_URL}/${id ? id : ''}`,
+      apiPayload
+    );
     return { type: success, payload: data };
   } catch ({ message }) {
     return { type: ERROR, payload: message };
@@ -36,11 +35,10 @@ const tryApiDispatch = async (
 
 const callApi = {
   get: success => tryApiDispatch(GET, success),
-  post: (success, payload) => tryApiDispatch(POST, success, payload),
-  put: (success, payload, id) =>
-    tryApiDispatch(PUT, success, payload, `${API_URL}/${id}`),
-  delete: (success, id) =>
-    tryApiDispatch(DELETE, success, null, `${API_URL}/${id}`),
+  post: (success, apiPayload) => tryApiDispatch(POST, success, { apiPayload }),
+  put: (success, apiPayload, id) =>
+    tryApiDispatch(PUT, success, { apiPayload, id }),
+  delete: (success, id) => tryApiDispatch(DELETE, success, { id }),
 };
 
 export const getSmurfs = () => async dispatch => {
