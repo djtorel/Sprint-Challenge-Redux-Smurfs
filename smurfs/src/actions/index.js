@@ -20,10 +20,10 @@ const POST = 'post';
 const PUT = 'put';
 const DELETE = 'delete';
 
-const tryApiDispatch = async (type, success, options) => {
+const tryApiDispatch = async (method, success, options) => {
   const { id, apiPayload } = options || {};
   try {
-    const { data } = await axios[type](
+    const { data } = await axios[method](
       `${API_URL}/${id ? id : ''}`,
       apiPayload
     );
@@ -33,30 +33,24 @@ const tryApiDispatch = async (type, success, options) => {
   }
 };
 
-const callApi = {
-  get: success => tryApiDispatch(GET, success),
-  post: (success, apiPayload) => tryApiDispatch(POST, success, { apiPayload }),
-  put: (success, apiPayload, id) =>
-    tryApiDispatch(PUT, success, { apiPayload, id }),
-  delete: (success, id) => tryApiDispatch(DELETE, success, { id }),
+const dispatchApi = (method, start, success, options) => async dispatch => {
+  dispatch({ type: start });
+  dispatch(await tryApiDispatch(method, success, options));
 };
 
-export const getSmurfs = () => async dispatch => {
-  dispatch({ type: FETCH_SMURFS_START });
-  dispatch(await callApi.get(FETCH_SMURFS_SUCCESS));
-};
+export const getSmurfs = () =>
+  dispatchApi(GET, FETCH_SMURFS_START, FETCH_SMURFS_SUCCESS);
 
-export const addSmurf = smurf => async dispatch => {
-  dispatch({ type: CREATE_SMURF_START });
-  dispatch(await callApi.post(CREATE_SMURF_SUCCESS, smurf));
-};
+export const addSmurf = apiPayload =>
+  dispatchApi(POST, CREATE_SMURF_START, CREATE_SMURF_SUCCESS, {
+    apiPayload,
+  });
 
-export const updateSmurf = (smurf, id) => async dispatch => {
-  dispatch({ type: UPDATE_SMURF_START });
-  dispatch(await callApi.put(UPDATE_SMURF_SUCCESS, smurf, id));
-};
+export const updateSmurf = (apiPayload, id) =>
+  dispatchApi(PUT, UPDATE_SMURF_START, UPDATE_SMURF_SUCCESS, {
+    apiPayload,
+    id,
+  });
 
-export const deleteSmurf = id => async dispatch => {
-  dispatch({ type: DELETE_SMURF_START });
-  dispatch(await callApi.delete(DELETE_SMURF_SUCCESS, id));
-};
+export const deleteSmurf = id =>
+  dispatchApi(DELETE, DELETE_SMURF_START, DELETE_SMURF_SUCCESS, { id });
