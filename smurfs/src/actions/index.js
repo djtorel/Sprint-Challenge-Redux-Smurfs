@@ -33,24 +33,26 @@ const tryApiDispatch = async (method, success, options) => {
   }
 };
 
-const dispatchApi = (method, start, success, options) => async dispatch => {
+const dispatchApi = (method, [start, success], options) => async dispatch => {
   dispatch({ type: start });
   dispatch(await tryApiDispatch(method, success, options));
 };
 
-export const getSmurfs = () =>
-  dispatchApi(GET, FETCH_SMURFS_START, FETCH_SMURFS_SUCCESS);
+const SMURF_GET = [FETCH_SMURFS_START, FETCH_SMURFS_SUCCESS];
+export const getSmurfs = () => dispatchApi(GET, SMURF_GET);
 
+const SMURF_ADD = [CREATE_SMURF_START, CREATE_SMURF_SUCCESS];
 export const addSmurf = apiPayload =>
-  dispatchApi(POST, CREATE_SMURF_START, CREATE_SMURF_SUCCESS, {
+  dispatchApi(POST, SMURF_ADD, {
     apiPayload,
   });
 
+const SMURF_UPDATE = [UPDATE_SMURF_START, UPDATE_SMURF_SUCCESS];
 export const updateSmurf = (apiPayload, id) =>
-  dispatchApi(PUT, UPDATE_SMURF_START, UPDATE_SMURF_SUCCESS, {
+  dispatchApi(PUT, SMURF_UPDATE, {
     apiPayload,
     id,
   });
 
-export const deleteSmurf = id =>
-  dispatchApi(DELETE, DELETE_SMURF_START, DELETE_SMURF_SUCCESS, { id });
+const SMURF_DELETE = [DELETE_SMURF_START, DELETE_SMURF_SUCCESS];
+export const deleteSmurf = id => dispatchApi(DELETE, SMURF_DELETE, { id });
