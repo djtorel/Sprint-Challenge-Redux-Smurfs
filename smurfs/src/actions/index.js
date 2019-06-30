@@ -24,7 +24,7 @@ const tryApiDispatch = async (method, success, options) => {
   const { id, apiPayload } = options || {};
   try {
     const { data } = await axios[method](
-      `${API_URL}/${id ? id : ''}`,
+      `${API_URL}/${id >= 0 ? id : ''}`,
       apiPayload
     );
     return { type: success, payload: data };
@@ -38,21 +38,23 @@ const dispatchApi = (method, [start, success], options) => async dispatch => {
   dispatch(await tryApiDispatch(method, success, options));
 };
 
+const callApi = {
+  get: actions => dispatchApi(GET, actions),
+  post: (actions, apiPayload) => dispatchApi(POST, actions, { apiPayload }),
+  put: (actions, apiPayload, id) =>
+    dispatchApi(PUT, actions, { apiPayload, id }),
+  delete: (actions, id) => dispatchApi(DELETE, actions, { id }),
+};
+
 const SMURF_GET = [FETCH_SMURFS_START, FETCH_SMURFS_SUCCESS];
-export const getSmurfs = () => dispatchApi(GET, SMURF_GET);
+export const getSmurfs = () => callApi.get(SMURF_GET);
 
 const SMURF_ADD = [CREATE_SMURF_START, CREATE_SMURF_SUCCESS];
-export const addSmurf = apiPayload =>
-  dispatchApi(POST, SMURF_ADD, {
-    apiPayload,
-  });
+export const addSmurf = apiPayload => callApi.post(SMURF_ADD, apiPayload);
 
 const SMURF_UPDATE = [UPDATE_SMURF_START, UPDATE_SMURF_SUCCESS];
 export const updateSmurf = (apiPayload, id) =>
-  dispatchApi(PUT, SMURF_UPDATE, {
-    apiPayload,
-    id,
-  });
+  callApi.put(SMURF_UPDATE, apiPayload, id);
 
 const SMURF_DELETE = [DELETE_SMURF_START, DELETE_SMURF_SUCCESS];
-export const deleteSmurf = id => dispatchApi(DELETE, SMURF_DELETE, { id });
+export const deleteSmurf = id => callApi.delete(SMURF_DELETE, id);
