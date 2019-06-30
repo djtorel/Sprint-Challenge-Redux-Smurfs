@@ -8,6 +8,9 @@ export const FETCH_SMURFS_SUCCESS = 'FETCH_SMURFS_SUCCESS';
 export const CREATE_SMURF_START = 'CREATE_SMURF_START';
 export const CREATE_SMURF_SUCCESS = 'CREATE_SMURF_SUCCESS';
 
+export const UPDATE_SMURF_START = 'UPDATE_SMURF_START';
+export const UPDATE_SMURF_SUCCESS = 'UPDATE_SMURF_SUCCESS';
+
 /*
   For this project you'll need at least 2 action creators for the main portion,
    and 2 more for the stretch problem.
@@ -22,10 +25,16 @@ export const CREATE_SMURF_SUCCESS = 'CREATE_SMURF_SUCCESS';
 const API_URL = 'http://localhost:3333/smurfs';
 const GET = 'get';
 const POST = 'post';
+const PUT = 'put';
 
-const tryApiDispatch = async (type, success, apiPayload = null) => {
+const tryApiDispatch = async (
+  type,
+  success,
+  apiPayload = null,
+  url = API_URL
+) => {
   try {
-    const { data } = await axios[type](API_URL, apiPayload);
+    const { data } = await axios[type](url, apiPayload);
     return { type: success, payload: data };
   } catch ({ message }) {
     return { type: ERROR, payload: message };
@@ -35,6 +44,8 @@ const tryApiDispatch = async (type, success, apiPayload = null) => {
 const callApi = {
   get: success => tryApiDispatch(GET, success),
   post: (success, payload) => tryApiDispatch(POST, success, payload),
+  put: (success, payload, id) =>
+    tryApiDispatch(PUT, success, payload, `${API_URL}/${id}`),
 };
 
 export const getSmurfs = () => async dispatch => {
@@ -45,4 +56,9 @@ export const getSmurfs = () => async dispatch => {
 export const addSmurf = smurf => async dispatch => {
   dispatch({ type: CREATE_SMURF_START });
   dispatch(await callApi.post(CREATE_SMURF_SUCCESS, smurf));
+};
+
+export const updateSmurf = (smurf, id) => async dispatch => {
+  dispatch({ type: UPDATE_SMURF_START });
+  dispatch(await callApi.put(UPDATE_SMURF_SUCCESS, smurf, id));
 };

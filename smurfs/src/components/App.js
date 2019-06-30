@@ -17,7 +17,7 @@ class App extends Component {
       <div className="App">
         <SmufForm />
         {smurfs.map(({ name, age, height, id }) => (
-          <Smurf key={id} name={name} age={age} height={height} />
+          <Smurf key={id} name={name} age={age} height={height} id={id} />
         ))}
       </div>
     );
