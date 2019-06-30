@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState, useReducer } from 'react';
 import { connect } from 'react-redux';
 import { updateSmurf } from '../actions';
 
@@ -7,17 +7,11 @@ const Smurf = ({ name, age, height, id, updateSmurf }) => {
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
-      name: '',
-      age: '',
-      height: '',
+      name,
+      age,
+      height,
     }
   );
-
-  useEffect(() => {
-    userInput.name = name;
-    userInput.age = age;
-    userInput.height = height;
-  }, []);
 
   const handleInput = ({ target: { name, value } }) => {
     setUserInput({ [name]: value });
