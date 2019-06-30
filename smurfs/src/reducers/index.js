@@ -6,6 +6,8 @@ import {
   CREATE_SMURF_SUCCESS,
   UPDATE_SMURF_START,
   UPDATE_SMURF_SUCCESS,
+  DELETE_SMURF_START,
+  DELETE_SMURF_SUCCESS,
 } from '../actions';
 
 const initialState = {
@@ -61,6 +63,19 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         smurfs: payload,
         updatingSmurf: false,
+        error: '',
+      };
+    case DELETE_SMURF_START:
+      return {
+        ...state,
+        deletingSmurf: true,
+        error: '',
+      };
+    case DELETE_SMURF_SUCCESS:
+      return {
+        ...state,
+        smurfs: payload,
+        deletingSmurf: false,
         error: '',
       };
     default:

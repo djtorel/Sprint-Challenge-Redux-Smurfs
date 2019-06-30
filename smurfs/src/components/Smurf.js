@@ -1,8 +1,8 @@
 import React, { useState, useReducer } from 'react';
 import { connect } from 'react-redux';
-import { updateSmurf } from '../actions';
+import { updateSmurf, deleteSmurf } from '../actions';
 
-const Smurf = ({ name, age, height, id, updateSmurf }) => {
+const Smurf = ({ name, age, height, id, updateSmurf, deleteSmurf }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
@@ -59,11 +59,12 @@ const Smurf = ({ name, age, height, id, updateSmurf }) => {
       <div> {age} </div>
       <div> {height} </div>
       <button onClick={() => setIsEditMode(true)}>Edit</button>
+      <button onClick={() => deleteSmurf(id)}>Delete</button>
     </div>
   );
 };
 
 export default connect(
   () => ({}),
-  { updateSmurf }
+  { updateSmurf, deleteSmurf }
 )(Smurf);
