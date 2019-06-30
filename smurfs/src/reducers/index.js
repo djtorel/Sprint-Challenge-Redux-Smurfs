@@ -44,7 +44,7 @@ export default (state = initialState, { type, payload }) => {
     case CREATE_SMURF_SUCCESS:
       return {
         ...state,
-        smurfs: [...state.smurfs, payload[state.smurfs.length]],
+        smurfs: payload,
         addingSmurf: false,
         error: '',
       };
